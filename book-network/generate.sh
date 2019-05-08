@@ -33,11 +33,11 @@ if [ "$?" -ne 0 ]; then
   exit 1
 fi
 # generate channel2 configuration transaction
-configtxgen -profile OtherOrgChannel -outputCreateChannelTx ./config/channel2.tx -channelID $CHANNEL2_NAME
-if [ "$?" -ne 0 ]; then
-  echo "Failed to generate channel configuration transaction..."
-  exit 1
-fi
+# configtxgen -profile OtherOrgChannel -outputCreateChannelTx ./config/channel2.tx -channelID $CHANNEL2_NAME
+# if [ "$?" -ne 0 ]; then
+#   echo "Failed to generate channel configuration transaction..."
+#   exit 1
+# fi
 # generate anchor peer transaction
 configtxgen -profile TwoOrgChannel -outputAnchorPeersUpdate ./config/Org1MSPanchors.tx -channelID $CHANNEL_NAME -asOrg Org1MSP
 if [ "$?" -ne 0 ]; then

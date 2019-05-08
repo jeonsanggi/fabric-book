@@ -137,10 +137,3 @@ Profiles:
             Organizations:
                 - *Org1
                 - *Org2
-
-    OtherOrgChannel:
-        Consortium: SampleConsortium
-        Application:
-            <<: *ApplicationDefaults
-            Organizations:
-                - *Org2

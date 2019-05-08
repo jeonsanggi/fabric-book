@@ -70,6 +70,7 @@ PeerOrgs:
     # ---------------------------------------------------------------------------
     Users:
       Count: 1
+      
   - Name: Org2
     Domain: org2.example.com
     Template:
