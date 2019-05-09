@@ -114,7 +114,7 @@ services:
       - ./crypto-config/peerOrganizations/org1.example.com/users:/etc/hyperledger/msp/users
     depends_on:
       - orderer.example.com
-      # - couchdb
+      - couchdb
 
   
   peer1.org1.example.com:

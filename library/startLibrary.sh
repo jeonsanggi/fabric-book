@@ -55,7 +55,7 @@ docker exec -e "CORE_PEER_ADDRESS=peer1.org1.example.com:7051" -e "CORE_PEER_ID=
 docker exec cli_org2 peer chaincode install -n library -v 1.0 -p "$CC_SRC_PATH" -l "$CC_RUNTIME_LANGUAGE"
 docker exec cli_org1 peer chaincode instantiate -o orderer.example.com:7050 -C mychannel -n library -l "$CC_RUNTIME_LANGUAGE" -v 1.0 -c '{"Args":[]}' -P "OR ('Org1MSP.member','Org2MSP.member')"
 sleep 10
-#docker exec cli_org1 peer chaincode invoke -o orderer.example.com:7050 -C mychannel -n library -c '{"function":"initLedger","Args":[]}'
+docker exec cli_org1 peer chaincode invoke -o orderer.example.com:7050 -C mychannel -n library -c '{"function":"initLedger","Args":[]}'
 
 cat <<EOF
 
