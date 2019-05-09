@@ -19,7 +19,7 @@ async function main() {
         // Create a new CA client for interacting with the CA.
         const caURL = ccp.certificateAuthorities['ca.org1.example.com'].url;
         const ca = new FabricCAServices(caURL);
-
+        console.log(ca);
         // Create a new file system based wallet for managing identities.
         const walletPath = path.join(process.cwd(), 'wallet');
         const wallet = new FileSystemWallet(walletPath);
@@ -32,7 +32,7 @@ async function main() {
             return;
         }
 
-        // Enroll the admin user and import the new identity into the wallet.
+        // Enroll the admin user, and import the new identity into the wallet.
         const enrollment = await ca.enroll({ enrollmentID: 'org1admin', enrollmentSecret: 'org1adminpw' });
         const identity = X509WalletMixin.createIdentity('Org1MSP', enrollment.certificate, enrollment.key.toBytes());
         wallet.import('admin', identity);

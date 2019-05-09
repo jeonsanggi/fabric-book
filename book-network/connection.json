@@ -52,22 +52,22 @@
     },
     "peers": {
         "peer0.org1.example.com": {
-            "url": "grpc://localhost:7051"
+            "url": "grpc://localhost:17051"
         },
         "peer1.org1.example.com": {
-            "url": "grpc://localhost:7051"
+            "url": "grpc://localhost:8051"
         },
         "peer0.org2.example.com": {
-            "url": "grpc://localhost:7051"
+            "url": "grpc://localhost:27051"
         }
     },
     "certificateAuthorities": {
         "ca.org1.example.com": {
-            "url": "http://localhost:7054",
+            "url": "http://localhost:17054",
             "caName": "ca.org1.example.com"
         },
         "ca.org2.example.com": {
-            "url": "http://localhost:7054",
+            "url": "http://localhost:27054",
             "caName": "ca.org2.example.com"
         }
     }
