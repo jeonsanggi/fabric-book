@@ -30,8 +30,7 @@ services:
     volumes:
       - ./crypto-config/peerOrganizations/org1.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
     container_name: ca.org1.example.com
-    networks:
-      - basic
+
 # ORG2 CA
   ca.org2.example.com:
     extends:
@@ -47,8 +46,6 @@ services:
     volumes:
       - ./crypto-config/peerOrganizations/org2.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
     container_name: ca.org2.example.com
-    networks:
-      - basic
 
   orderer.example.com:
     container_name: orderer.example.com
@@ -86,6 +83,8 @@ services:
     volumes:
       - /var/run/:/host/var/run/
       - ./config:/etc/hyperledger/configtx
+    networks:
+      - basic
 
   peer0.org1.example.com:
     extends:
@@ -116,8 +115,7 @@ services:
     depends_on:
       - orderer.example.com
       # - couchdb
-    networks:
-      - basic
+
   
   peer1.org1.example.com:
     extends:
@@ -125,7 +123,7 @@ services:
     container_name: peer1.org1.example.com
     environment:
       - CORE_PEER_ID=peer1.org1.example.com
-      - CORE_PEER_LOCALMSPID=org1MSP
+      - CORE_PEER_LOCALMSPID=Org1MSP
       - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/users/Admin@org1.example.com/msp
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.org1.example.com:7051
       - CORE_PEER_ADDRESS=peer1.org1.example.com:7051
@@ -137,8 +135,6 @@ services:
       - ./crypto-config/peerOrganizations/org1.example.com/users:/etc/hyperledger/msp/users
     depends_on:
       - orderer.example.com
-    networks:
-      - basic
 
   peer0.org2.example.com:
     extends:
@@ -158,9 +154,6 @@ services:
       - ./crypto-config/peerOrganizations/org2.example.com/users:/etc/hyperledger/msp/users
     depends_on:
       - orderer.example.com
-    networks:
-      - basic
-  
 
   couchdb:
     container_name: couchdb
@@ -174,7 +167,7 @@ services:
       - 5984:5984
     networks:
       - basic
-
+  
   cli_org1:
     container_name: cli_org1
     image: hyperledger/fabric-tools

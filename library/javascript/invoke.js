@@ -37,11 +37,12 @@ async function main() {
 
         // Get the contract from the network.
         const contract = network.getContract('library');
-
+        console.log("get contract Success");
         // Submit the specified transaction.
         // createCar transaction - requires 5 argument, ex: ('createCar', 'CAR12', 'Honda', 'Accord', 'Black', 'Tom')
         // changeCarOwner transaction - requires 2 args , ex: ('changeCarOwner', 'CAR10', 'Dave')
-        await contract.submitTransaction('createCar', 'CAR12', 'Honda', 'Accord', 'Black', 'Tom');
+        console.log(contract);
+        await contract.submitTransaction('createBook','BOOK1','a','b','c','d','e');
         //await contract.submitTransaction('set', 'soccer', 'Jeon')
         console.log('Transaction has been submitted');
 

@@ -44,11 +44,11 @@ type SmartContract struct {
 
 // Define the book structure, with 5 properties.  Structure tags are used by encoding/json library
 type Book struct {
-	Bookname string `json:"bookname"`
-	Author string `json:"author"`
-	Publisher string `json: "author"`
-	Location string `json: location`
-	Library string `json: library`
+	Bookname 	string `json:"bookname"`
+	Author 		string `json:"author"`
+	Publisher 	string `json: "publisher"`
+	Location 	string `json: location`
+	Library		string `json: library`
 }
 
 /*
@@ -111,7 +111,7 @@ func (s *SmartContract) createBook(APIstub shim.ChaincodeStubInterface, args []s
 	if len(args) != 6 {
 		return shim.Error("Incorrect number of arguments. Expecting 6")
 	}
-
+	fmt.Println(args)
 	var book = Book{Bookname: args[1], Author: args[2], Publisher: args[3], Location: args[4], Library : args[5]}
 
 	bookAsBytes, _ := json.Marshal(book)
@@ -186,6 +186,6 @@ func main() {
 	// Create a new Smart Contract
 	err := shim.Start(new(SmartContract))
 	if err != nil {
-		fmt.Printf("Error creating new Smart Contract: %s", err)	
+		fmt.Printf("Error creating new Smart Contract: %s", err);
 	}
 }

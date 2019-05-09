@@ -16,7 +16,7 @@ docker-compose -f docker-compose.yml down
 docker-compose -f docker-compose.yml up -d orderer.example.com \
             ca.org1.example.com peer0.org1.example.com peer1.org1.example.com \
             ca.org2.example.com peer0.org2.example.com \
-            cli_org1 cli_org2
+            cli_org1 cli_org2 
 
 docker ps -a
 
@@ -38,3 +38,6 @@ docker exec peer0.org1.example.com peer channel join -b /etc/hyperledger/configt
 docker exec peer1.org1.example.com peer channel join -b /etc/hyperledger/configtx/mychannel.block
 # Join peer0.org2.example.com to the channel.
 docker exec peer0.org2.example.com peer channel join -b /etc/hyperledger/configtx/mychannel.block
+
+docker exec cli_org1 peer channel update -o orderer.example.com:7050 -c mychannel -f /etc/hyperledger/configtx/Org1MSPanchors.tx
+docker exec cli_org2 peer channel update -o orderer.example.com:7050 -c mychannel -f /etc/hyperledger/configtx/Org2MSPanchors.tx

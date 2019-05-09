@@ -36,11 +36,11 @@ app.get('/api/querybook', function (req, res) {
 app.post('/api/querybook/', async function (req, res) {
                 // create the key value store as defined in the fabric-client/config/default.json 'key-value-store' setting
     try {
-	var bookname = req.query.bookname;
+	var bookname = req.body.bookname;
 	console.log(bookname);
 
         // Create a new file system based wallet for managing identities.
-        const walletPath = path.join(process.cwd(), 'javascript/wallet');
+        const walletPath = path.join(process.cwd(), 'wallet');
         const wallet = new FileSystemWallet(walletPath);
         console.log(`Wallet path: ${walletPath}`);
 
@@ -89,7 +89,7 @@ app.post('/api/createbook/', async function (req, res) {
   var library = req.body.library;
 
         // Create a new file system based wallet for managing identities.
-        const walletPath = path.join(process.cwd(), 'javascript/wallet');
+        const walletPath = path.join(process.cwd(), 'wallet');
         const wallet = new FileSystemWallet(walletPath);
         console.log(`Wallet path: ${walletPath}`);
 
@@ -114,7 +114,7 @@ app.post('/api/createbook/', async function (req, res) {
         // createCar transaction - requires 5 argument, ex: ('createCar', 'CAR12', 'Honda', 'Accord', 'Black', 'Tom')
         // changeCarOwner transaction - requires 2 args , ex: ('changeCarOwner', 'CAR10', 'Dave')
 //        await contract.submitTransaction('createCar', 'CAR11', 'Hnda', 'Aord', 'Bla', 'Tom');
-        await contract.submitTransaction('createBook', bookno, author, publisher, location, library);
+        await contract.submitTransaction('createBook', bookno, bookname, author, publisher, location, library);
         console.log('Transaction has been submitted');
 
         // Disconnect from the gateway.
