@@ -13,7 +13,7 @@ services:
     image: hyperledger/fabric-ca
     environment: 
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
-      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      #- FABRIC_CA_SERVER_TLS_ENABLED=true
     networks:
       - basic
 # ORG1 CA
@@ -44,7 +44,7 @@ services:
       - FABRIC_CA_SERVER_CA_NAME=ca.org2.example.com
       #- FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org2.example.com-cert.pem
       #- FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/e06462127ccefe3e15c130bdfc76e6ec9cd2009c795940dc008e75a4344696cc_sk
-      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org1.example.com-cert.pem
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org2.example.com-cert.pem
       - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/0a601a5fa6f14f2ea8231dda3fab5202340b042f81362a2810b2a87a411ac0af_sk
     ports:
       - "27054:7054"
@@ -260,7 +260,7 @@ services:
       - FABRIC_LOGGING_SPEC=info
       - CORE_PEER_ID=cli_org2
       - CORE_PEER_ADDRESS=peer0.org2.example.com:7051
-      - CORE_PEER_LOCALMSPID=org2MSP
+      - CORE_PEER_LOCALMSPID=Org2MSP
       - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp
       - CORE_CHAINCODE_KEEPALIVE=10
       # Enable TLS

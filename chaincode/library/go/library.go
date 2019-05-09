@@ -29,7 +29,7 @@ package main
  * 2 specific Hyperledger Fabric specific libraries for Smart Contracts
  */
 import (
-	"bytes"
+
 	"encoding/json"
 	"fmt"
 	"strconv"
@@ -91,8 +91,7 @@ func (s *SmartContract) queryBook(APIstub shim.ChaincodeStubInterface, args []st
 
 func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Response {
 	books := []Book{
-		Book{Bookname: "연금술사", Author: "파울로 코엘료", Publisher: "문학동네", Location: "고양시", Library : "백석 도서관"}
-
+		Book{Bookname: "연금술사", Author: "파울로 코엘료", Publisher: "문학동네", Location: "고양시", Library : "백석 도서관"},
 	}
 
 	i := 0
@@ -183,11 +182,10 @@ func (s *SmartContract) createBook(APIstub shim.ChaincodeStubInterface, args []s
 // }
 //
 // // The main function is only relevant in unit test mode. Only included here for completeness.
-// func main() {
-//
-// 	// Create a new Smart Contract
-// 	err := shim.Start(new(SmartContract))
-// 	if err != nil {
-// 		fmt.Printf("Error creating new Smart Contract: %s", err)
-// 	}
-// }
+func main() {
+	// Create a new Smart Contract
+	err := shim.Start(new(SmartContract))
+	if err != nil {
+		fmt.Printf("Error creating new Smart Contract: %s", err)	
+	}
+}
