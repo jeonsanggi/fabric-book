@@ -6,7 +6,7 @@
 <body>
   <h1>CreateBook Page</h1>
   <hr />
-  <form method="post">
+  <form method="post" id="bookData">
     <table>
       <tr>
         <td><label>BookName</label></td>
@@ -29,7 +29,28 @@
         <td><input type="text" name="library" /></td>
       </tr>
     </table>
-   <input type="submit" name="" />
+   <input type="button" onclick="createBook()" value="책 추가" />
   </form>
+  <button type="button" onclick="location.href='/'">홈으로</button>
+  <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+  <script>
+    function createBook(){
+      var bookData = $('#bookData').serialize();
+
+      $.ajax({
+        method:'post',
+        url:'/api/createbook/',
+        dataType:'json',
+        data:bookData,
+        error: function(request,status,error){
+          alert('오류가 발생하여 책 추가를 실패하였습니다.');
+          
+        },
+        success: function(data){
+          alert('책 추가 성공하였습니다.');
+        }
+      });
+    }
+  </script>
 </body>
 </html>

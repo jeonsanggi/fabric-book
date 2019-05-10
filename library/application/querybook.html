@@ -13,7 +13,7 @@
   </style>
 </head>
 <body>
-  <h1>CreateCar Page</h1>
+  <h1>QueryBook Page</h1>
   <hr />
   <form method="post" id="queryBook">
     <table>
@@ -50,8 +50,9 @@
         url:'/api/querybook/',
         dataType:'json',
         data:queryBookData,
-        err: function(request,status,error){
-
+        error: function(request,status,error){
+          alert('검색 실패하였습니다.');
+          
         },
         success: function(data){
           var result = data.response;

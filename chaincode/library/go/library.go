@@ -153,7 +153,7 @@ func (s *SmartContract) createBook(APIstub shim.ChaincodeStubInterface, args []s
 	}
 	fmt.Println(args)
 	var book = Book{Bookname: args[0], Author: args[1], Publisher: args[2], Location: args[3], Library : args[4]}
-	Key, _ := APIstub.CreateCompositeKey(args[0], []string{args[0], args[3]})
+	Key, _ := APIstub.CreateCompositeKey(args[0], []string{args[3], args[4]})
 	bookAsBytes, _ := json.Marshal(book)
 	APIstub.PutState(Key, bookAsBytes)
 

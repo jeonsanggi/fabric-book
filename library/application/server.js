@@ -38,12 +38,10 @@ app.post('/api/querybook/', async function (req, res) {
     try {
 	var bookname = req.body.bookname;
   var location = req.body.location;
-	console.log(bookname);
 
         // Create a new file system based wallet for managing identities.
         const walletPath = path.join(process.cwd(), 'wallet');
         const wallet = new FileSystemWallet(walletPath);
-        console.log(`Wallet path: ${walletPath}`);
 
         // Check to see if we've already enrolled the user.
         const userExists = await wallet.exists('user1');
@@ -92,7 +90,6 @@ app.post('/api/createbook/', async function (req, res) {
         // Create a new file system based wallet for managing identities.
         const walletPath = path.join(process.cwd(), 'wallet');
         const wallet = new FileSystemWallet(walletPath);
-        console.log(`Wallet path: ${walletPath}`);
 
         // Check to see if we've already enrolled the user.
         const userExists = await wallet.exists('user1');
@@ -112,9 +109,6 @@ app.post('/api/createbook/', async function (req, res) {
         const contract = network.getContract('library');
 
         // Submit the specified transaction.
-        // createCar transaction - requires 5 argument, ex: ('createCar', 'CAR12', 'Honda', 'Accord', 'Black', 'Tom')
-        // changeCarOwner transaction - requires 2 args , ex: ('changeCarOwner', 'CAR10', 'Dave')
-//        await contract.submitTransaction('createCar', 'CAR11', 'Hnda', 'Aord', 'Bla', 'Tom');
         await contract.submitTransaction('createBook', bookname, author, publisher, location, library);
         console.log('Transaction has been submitted');
 
