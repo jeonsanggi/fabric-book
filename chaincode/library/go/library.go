@@ -32,7 +32,7 @@ import (
 
 	"encoding/json"
 	"fmt"
-	"strconv"
+	"bytes"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	sc "github.com/hyperledger/fabric/protos/peer"
@@ -89,36 +89,56 @@ func (s *SmartContract) queryBook(APIstub shim.ChaincodeStubInterface, args []st
 	location := args[1]
 	fmt.Println("bookname, location : ", bookname, location)
 
-	results, err := APIstub.GetStateByPartialCompositeKey(bookname, []string{args[0], args[1]})
+	results, err := APIstub.GetStateByPartialCompositeKey(bookname, []string{location})
 
 	if err != nil{
 		return shim.Error(err.Error())
 	}
 	defer results.Close()
 	var i int
+	var buffer bytes.Buffer
+	buffer.WriteString("[")
+	bArrayMemberAlreadyWritten := false
 
 	for i = 0; results.HasNext(); i++{
 		responseRange, err := results.Next()
-		if err != nil{
+		if err != nil {
 			return shim.Error(err.Error())
 		}
+		// Add a comma before array members, suppress it for the first array member
+		if bArrayMemberAlreadyWritten == true {
+			buffer.WriteString(",")
+		}
+		buffer.WriteString(string(responseRange.Value))
 		//objectType, compositeKeyParts, err := APIstub.SplitCompositeKey(responseRange.Key)
-		bookAsBytes, _ := APIstub.GetState(responseRange.Key)
-		return shim.Success(bookAsBytes)
+		//bookAsBytes, _ := APIstub.GetState(responseRange.Key)
+		fmt.Printf("- found a marble from Key:%s Value:%s \n", responseRange.Key, responseRange.Value)
+		//return shim.Success(responseRange.Value)
+		bArrayMemberAlreadyWritten = true
 	}
-	return shim.Success(nil)
+	buffer.WriteString("]")
+	return shim.Success(buffer.Bytes())
 }
 
 func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Response {
 	books := []Book{
-		Book{Bookname: "연금술사", Author: "파울로 코엘료", Publisher: "문학동네", Location: "고양시", Library : "백석 도서관"},
+		Book{Bookname: "연금술사", Author: "파울로 코엘료", Publisher: "문학동네", Location: "고양시", Library : "백석 도서관0"},
+		Book{Bookname: "연금술사", Author: "파울로 코엘료", Publisher: "문학동네", Location: "고양시", Library : "백석 도서관1"},
+		Book{Bookname: "연금술사", Author: "파울로 코엘료", Publisher: "문학동네", Location: "고양시", Library : "백석 도서관2"},
+		Book{Bookname: "연금술사", Author: "파울로 코엘료", Publisher: "문학동네", Location: "고양시", Library : "백석 도서관3"},
+		Book{Bookname: "연금술사", Author: "파울로 코엘료", Publisher: "문학동네", Location: "고양시", Library : "백석 도서관4"},
+		Book{Bookname: "연금술사", Author: "파울로 코엘료", Publisher: "문학동네", Location: "고양시", Library : "백석 도서관5"},
+		Book{Bookname: "연금술사", Author: "파울로 코엘료", Publisher: "문학동네", Location: "고양시", Library : "백석 도서관6"},
+		Book{Bookname: "연금술사", Author: "파울로 코엘료", Publisher: "문학동네", Location: "고양시", Library : "백석 도서관7"},
+		Book{Bookname: "연금술사", Author: "파울로 코엘료", Publisher: "문학동네", Location: "고양시", Library : "백석 도서관8"},
 	}
 
 	i := 0
 	for i < len(books) {
 		fmt.Println("i is ", i)
+		Key, _ := APIstub.CreateCompositeKey(books[i].Bookname, []string{books[i].Location, books[i].Library})
 		bookAsBytes, _ := json.Marshal(books[i])
-		APIstub.PutState("BOOK"+strconv.Itoa(i), bookAsBytes)
+		APIstub.PutState(Key, bookAsBytes)
 		fmt.Println("Added", books[i])
 		i = i + 1
 	}
