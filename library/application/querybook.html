@@ -61,7 +61,12 @@
           for(var i=0;i<result.length;i++){
             $('#bookList').append('<tr class="book"><td width="30%">'+result[i].Bookname+'</td><td width="20%">'+result[i].Author+
                                   '</td><td width="20%">'+result[i].Publisher+'</td><td width="10%">'+result[i].Location+
-                                  '</td><td width="10%">'+result[i].Library+'</td></tr>');
+                                  '</td><td width="10%">'+result[i].Library+'</td>');
+            if(result[i].Rent){
+              $('#bookList').append('<td>대여가능</td></tr>');
+            }else {
+              $('#bookList').append('<td>대여불가능</td></tr>');
+            }
           }
         }
       });

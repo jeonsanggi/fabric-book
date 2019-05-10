@@ -44,12 +44,15 @@ type SmartContract struct {
 
 // Define the book structure, with 5 properties.  Structure tags are used by encoding/json library
 type Book struct {
+	Bookno		int	   `json: "bookno"`
 	Bookname 	string `json: "bookname"`
 	Author 		string `json: "author"`
 	Publisher 	string `json: "publisher"`
 	Location 	string `json: "location"`
 	Library		string `json: "library"`
+	Rent        bool   `json: "rent"`
 }
+
 
 /*
  * The Init method is called when the Smart Contract "library" is instantiated by the blockchain network
@@ -122,15 +125,15 @@ func (s *SmartContract) queryBook(APIstub shim.ChaincodeStubInterface, args []st
 
 func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Response {
 	books := []Book{
-		Book{Bookname: "연금술사", Author: "파울로 코엘료", Publisher: "문학동네", Location: "고양시", Library : "백석 도서관0"},
-		Book{Bookname: "연금술사", Author: "파울로 코엘료", Publisher: "문학동네", Location: "고양시", Library : "백석 도서관1"},
-		Book{Bookname: "연금술사", Author: "파울로 코엘료", Publisher: "문학동네", Location: "고양시", Library : "백석 도서관2"},
-		Book{Bookname: "연금술사", Author: "파울로 코엘료", Publisher: "문학동네", Location: "고양시", Library : "백석 도서관3"},
-		Book{Bookname: "연금술사", Author: "파울로 코엘료", Publisher: "문학동네", Location: "고양시", Library : "백석 도서관4"},
-		Book{Bookname: "연금술사", Author: "파울로 코엘료", Publisher: "문학동네", Location: "고양시", Library : "백석 도서관5"},
-		Book{Bookname: "연금술사", Author: "파울로 코엘료", Publisher: "문학동네", Location: "고양시", Library : "백석 도서관6"},
-		Book{Bookname: "연금술사", Author: "파울로 코엘료", Publisher: "문학동네", Location: "고양시", Library : "백석 도서관7"},
-		Book{Bookname: "연금술사", Author: "파울로 코엘료", Publisher: "문학동네", Location: "고양시", Library : "백석 도서관8"},
+		Book{Bookno: 0,Bookname: "연금술사", Author: "파울로 코엘료", Publisher: "문학동네", Location: "고양시", Library : "백석 도서관0", Rent: true},
+		Book{Bookno: 1,Bookname: "연금술사", Author: "파울로 코엘료", Publisher: "문학동네", Location: "고양시", Library : "백석 도서관1", Rent: true},
+		Book{Bookno: 2,Bookname: "연금술사", Author: "파울로 코엘료", Publisher: "문학동네", Location: "고양시", Library : "백석 도서관2", Rent: true},
+		Book{Bookno: 3,Bookname: "연금술사", Author: "파울로 코엘료", Publisher: "문학동네", Location: "고양시", Library : "백석 도서관3", Rent: true},
+		Book{Bookno: 4,Bookname: "연금술사", Author: "파울로 코엘료", Publisher: "문학동네", Location: "고양시", Library : "백석 도서관4", Rent: true},
+		Book{Bookno: 5,Bookname: "연금술사", Author: "파울로 코엘료", Publisher: "문학동네", Location: "고양시", Library : "백석 도서관5", Rent: true},
+		Book{Bookno: 6,Bookname: "연금술사", Author: "파울로 코엘료", Publisher: "문학동네", Location: "고양시", Library : "백석 도서관6", Rent: true},
+		Book{Bookno: 7,Bookname: "연금술사", Author: "파울로 코엘료", Publisher: "문학동네", Location: "고양시", Library : "백석 도서관7", Rent: true},
+		Book{Bookno: 8,Bookname: "연금술사", Author: "파울로 코엘료", Publisher: "문학동네", Location: "고양시", Library : "백석 도서관8", Rent: true},
 	}
 
 	i := 0
@@ -148,12 +151,12 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 
 func (s *SmartContract) createBook(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
-	if len(args) != 5 {
+	if len(args) != 6 {
 		return shim.Error("Incorrect number of arguments. Expecting 6")
 	}
 	fmt.Println(args)
-	var book = Book{Bookname: args[0], Author: args[1], Publisher: args[2], Location: args[3], Library : args[4]}
-	Key, _ := APIstub.CreateCompositeKey(args[0], []string{args[3], args[4]})
+	var book = Book{Bookno: args[0], Bookname: args[1], Author: args[2], Publisher: args[3], Location: args[4], Library : args[5], Rent: true}
+	Key, _ := APIstub.CreateCompositeKey(args[0], []string{args[4], args[5]})
 	bookAsBytes, _ := json.Marshal(book)
 	APIstub.PutState(Key, bookAsBytes)
 
