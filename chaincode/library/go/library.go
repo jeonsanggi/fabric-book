@@ -29,7 +29,7 @@ package main
  * 2 specific Hyperledger Fabric specific libraries for Smart Contracts
  */
 import (
-	"bytes"
+
 	"encoding/json"
 	"fmt"
 	"strconv"
@@ -81,76 +81,37 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 
 func (s *SmartContract) queryBook(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
-	// if len(args) != 1 {
-	// 	return shim.Error("Incorrect number of arguments. Expecting 1")
-	// }
-	
-	booksIterator, err := APIstub.GetQueryResult("{\"selector\":{\"bookname\":"+args[0]+",\"location\":"+args[1]+"}}")
-	if err != nil {
+	if len(args) != 2 {
+		return shim.Error("Incorrect number of arguments. Expecting 1")
+	}
+
+	bookname := args[0]
+	location := args[1]
+	fmt.Println("bookname, location : ", bookname, location)
+
+	results, err := APIstub.GetStateByPartialCompositeKey(bookname, []string{args[0], args[1]})
+
+	if err != nil{
 		return shim.Error(err.Error())
 	}
-	defer booksIterator.Close()
+	defer results.Close()
+	var i int
 
-	// buffer is a JSON array containing QueryRecords
-	var buffer bytes.Buffer
-	buffer.WriteString("[")
-
-	bArrayMemberAlreadyWritten := false
-	for booksIterator.HasNext() {
-		queryResponse, err := booksIterator.Next()
-		if err != nil {
+	for i = 0; results.HasNext(); i++{
+		responseRange, err := results.Next()
+		if err != nil{
 			return shim.Error(err.Error())
 		}
-		// Add a comma before array members, suppress it for the first array member
-		if bArrayMemberAlreadyWritten == true {
-			buffer.WriteString(",")
-		}
-		buffer.WriteString("{\"Key\":")
-		buffer.WriteString("\"")
-		buffer.WriteString(queryResponse.Key)
-		buffer.WriteString("\"")
-
-		buffer.WriteString(", \"Record\":")
-		// Record is a JSON object, so we write as-is
-		buffer.WriteString(string(queryResponse.Value))
-		buffer.WriteString("}")
-		bArrayMemberAlreadyWritten = true
+		//objectType, compositeKeyParts, err := APIstub.SplitCompositeKey(responseRange.Key)
+		bookAsBytes, _ := APIstub.GetState(responseRange.Key)
+		return shim.Success(bookAsBytes)
 	}
-	buffer.WriteString("]")
-
-	fmt.Printf("- getQueryResultForQueryString queryResult:\n%s\n", buffer.String())
-
-	return shim.Success(buffer.Bytes())
+	return shim.Success(nil)
 }
-
-// func (s *SmartContract) changeCarOwner(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
-
-// 	if len(args) != 2 {
-// 		return shim.Error("Incorrect number of arguments. Expecting 2")
-// 	}
-
-// 	carAsBytes, _ := APIstub.GetState(args[0])
-// 	car := Car{}
-
-// 	json.Unmarshal(carAsBytes, &car)
-// 	car.Owner = args[1]
-
-// 	carAsBytes, _ = json.Marshal(car)
-// 	APIstub.PutState(args[0], carAsBytes)
-
-// 	return shim.Success(nil)
-// }
 
 func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Response {
 	books := []Book{
 		Book{Bookname: "연금술사", Author: "파울로 코엘료", Publisher: "문학동네", Location: "고양시", Library : "백석 도서관"},
-		Book{Bookname: "연금술사1", Author: "파울로 코엘료", Publisher: "문학동네", Location: "고양시1", Library : "백석 도서관"},
-		Book{Bookname: "연금술사2", Author: "파울로 코엘료", Publisher: "문학동네", Location: "고양시2", Library : "백석 도서관"},
-		Book{Bookname: "연금술사3", Author: "파울로 코엘료", Publisher: "문학동네", Location: "고양시3", Library : "백석 도서관"},
-		Book{Bookname: "연금술사4", Author: "파울로 코엘료", Publisher: "문학동네", Location: "고양시4", Library : "백석 도서관"},
-		Book{Bookname: "연금술사5", Author: "파울로 코엘료", Publisher: "문학동네", Location: "고양시5", Library : "백석 도서관"},
-		Book{Bookname: "연금술사6", Author: "파울로 코엘료", Publisher: "문학동네", Location: "고양시6", Library : "백석 도서관"},
-		Book{Bookname: "연금술사7", Author: "파울로 코엘료", Publisher: "문학동네", Location: "고양시7", Library : "백석 도서관"},
 	}
 
 	i := 0
@@ -167,80 +128,19 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 
 func (s *SmartContract) createBook(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
-	if len(args) != 6 {
+	if len(args) != 5 {
 		return shim.Error("Incorrect number of arguments. Expecting 6")
 	}
 	fmt.Println(args)
-	var book = Book{Bookname: args[1], Author: args[2], Publisher: args[3], Location: args[4], Library : args[5]}
-
+	var book = Book{Bookname: args[0], Author: args[1], Publisher: args[2], Location: args[3], Library : args[4]}
+	Key, _ := APIstub.CreateCompositeKey(args[0], []string{args[0], args[3]})
 	bookAsBytes, _ := json.Marshal(book)
-	APIstub.PutState(args[0], bookAsBytes)
+	APIstub.PutState(Key, bookAsBytes)
 
 	return shim.Success(nil)
 }
-//
-// func (s *SmartContract) queryAllCars(APIstub shim.ChaincodeStubInterface) sc.Response {
-//
-// 	startKey := "CAR0"
-// 	endKey := "CAR999"
-//
-// 	resultsIterator, err := APIstub.GetStateByRange(startKey, endKey)
-// 	if err != nil {
-// 		return shim.Error(err.Error())
-// 	}
-// 	defer resultsIterator.Close()
-//
-// 	// buffer is a JSON array containing QueryResults
-// 	var buffer bytes.Buffer
-// 	buffer.WriteString("[")
-//
-// 	bArrayMemberAlreadyWritten := false
-// 	for resultsIterator.HasNext() {
-// 		queryResponse, err := resultsIterator.Next()
-// 		if err != nil {
-// 			return shim.Error(err.Error())
-// 		}
-// 		// Add a comma before array members, suppress it for the first array member
-// 		if bArrayMemberAlreadyWritten == true {
-// 			buffer.WriteString(",")
-// 		}
-// 		buffer.WriteString("{\"Key\":")
-// 		buffer.WriteString("\"")
-// 		buffer.WriteString(queryResponse.Key)
-// 		buffer.WriteString("\"")
-//
-// 		buffer.WriteString(", \"Record\":")
-// 		// Record is a JSON object, so we write as-is
-// 		buffer.WriteString(string(queryResponse.Value))
-// 		buffer.WriteString("}")
-// 		bArrayMemberAlreadyWritten = true
-// 	}
-// 	buffer.WriteString("]")
-//
-// 	fmt.Printf("- queryAllCars:\n%s\n", buffer.String())
-//
-// 	return shim.Success(buffer.Bytes())
-// }
 
-// func (s *SmartContract) changeCarOwner(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
-//
-// 	if len(args) != 2 {
-// 		return shim.Error("Incorrect number of arguments. Expecting 2")
-// 	}
-//
-// 	carAsBytes, _ := APIstub.GetState(args[0])
-// 	car := Car{}
-//
-// 	json.Unmarshal(carAsBytes, &car)
-// 	car.Owner = args[1]
-//
-// 	carAsBytes, _ = json.Marshal(car)
-// 	APIstub.PutState(args[0], carAsBytes)
-//
-// 	return shim.Success(nil)
-// }
-//
-// // The main function is only relevant in unit test mode. Only included here for completeness.
+// The main function is only relevant in unit test mode. Only included here for completeness.
 func main() {
 	// Create a new Smart Contract
 	err := shim.Start(new(SmartContract))
