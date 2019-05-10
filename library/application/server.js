@@ -65,8 +65,9 @@ app.post('/api/querybook/', async function (req, res) {
         // Evaluate the specified transaction.
         const result = await contract.evaluateTransaction('queryBook', bookname, location);
 
+        //console.log(`Transaction has been evaluated, result is: ${result.toString()}`);
         console.log(`Transaction has been evaluated, result is: ${result.toString()}`);
-        res.status(200).json({response: result.toString()});
+        res.status(200).json({response: JSON.parse(result.toString())});
     } catch (error) {
         console.error(`Failed to evaluate transaction: ${error}`);
         res.status(400).json(error);

@@ -44,11 +44,11 @@ type SmartContract struct {
 
 // Define the book structure, with 5 properties.  Structure tags are used by encoding/json library
 type Book struct {
-	Bookname 	string `json:"bookname"`
-	Author 		string `json:"author"`
+	Bookname 	string `json: "bookname"`
+	Author 		string `json: "author"`
 	Publisher 	string `json: "publisher"`
-	Location 	string `json: location`
-	Library		string `json: library`
+	Location 	string `json: "location"`
+	Library		string `json: "library"`
 }
 
 /*
